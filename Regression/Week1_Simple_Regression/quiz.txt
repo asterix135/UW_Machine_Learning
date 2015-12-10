@@ -1,0 +1,22 @@
+I
+1. y = w_0 * w_1 + log(w_1) * x
+2. True   (wrong: right answer is worse???)
+3. Might
+4. It is impossible to tell  (wrong)
+5. algo to min/max a function
+6. estimate model parameters
+7. too large: not converge
+   too small: too slow
+8. Let's analyze how many computations are required to fit a multiple linear regression model using the closed-form solution based on a data set with 50 observations and 10 features. In the videos, we said that computing the inverse of the 10x10 matrix (H^T)H was on the order of D^3 operations. Let's focus on forming this matrix prior to inversion. How many multiplications are required to form the matrix (H^T)H?
+
+Please enter a single numeric value.
+1000 (wrong)
+9. O(N^2D + D^3) (wrong: More generally, if you have D features and N observations what is the total complexity of computing ((H^T)H)^(-1)? )
+
+
+II
+
+
+
+
+III
