@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 # import matplotlib.pyplot as plt
 
 
@@ -35,6 +36,7 @@ def inverse_regression_predictions(output, intercept, slope):
 
 
 def wrapper():
+    os.chdir('..')
     train = pd.read_csv('kc_house_train_data.csv')
     test = pd.read_csv('kc_house_test_data.csv')
     sqft_intercept, sqft_slope = simple_linear_regression(train['sqft_living'],

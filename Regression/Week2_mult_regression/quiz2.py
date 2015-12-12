@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 from sklearn import linear_model
@@ -48,17 +49,18 @@ def get_regression_coefficients(df_train, df_test):
                                              'bathrooms',
                                              'lat',
                                              'long']])
-    mod2_train_pred = mod1.predict(df_train[['sqft_living',
+    mod2_train_pred = mod2.predict(df_train[['sqft_living',
                                              'bedrooms',
                                              'bathrooms',
                                              'lat',
                                              'long',
                                              'bed_bath_rooms']])
-    mod3_train_pred = mod1.predict(df_train[['sqft_living',
+    mod3_train_pred = mod3.predict(df_train[['sqft_living',
                                              'bedrooms',
                                              'bathrooms',
                                              'lat',
                                              'long',
+                                             'bed_bath_rooms',
                                              'bedrooms_squared',
                                              'log_sqft_living',
                                              'lat_plus_long']])
@@ -73,17 +75,18 @@ def get_regression_coefficients(df_train, df_test):
                                            'bathrooms',
                                            'lat',
                                            'long']])
-    mod2_test_pred = mod1.predict(df_test[['sqft_living',
+    mod2_test_pred = mod2.predict(df_test[['sqft_living',
                                            'bedrooms',
                                            'bathrooms',
                                            'lat',
                                            'long',
                                            'bed_bath_rooms']])
-    mod3_test_pred = mod1.predict(df_test[['sqft_living',
+    mod3_test_pred = mod3.predict(df_test[['sqft_living',
                                            'bedrooms',
                                            'bathrooms',
                                            'lat',
                                            'long',
+                                           'bed_bath_rooms',
                                            'bedrooms_squared',
                                            'log_sqft_living',
                                            'lat_plus_long']])
@@ -96,14 +99,14 @@ def get_regression_coefficients(df_train, df_test):
 
 
 def wrapper():
+    os.chdir('..')
     train = pd.read_csv('kc_house_train_data.csv')
     test = pd.read_csv('kc_house_test_data.csv')
     add_variables(train)
     add_variables(test)
+    get_new_means(test)
     get_regression_coefficients(train, test)
 
 
 if __name__ == '__main__':
     wrapper()
-
-# NOTE: Make sure to pip3 install scipy at home!!!
