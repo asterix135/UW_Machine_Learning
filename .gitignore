@@ -4,6 +4,8 @@
 *.pdf
 Machine_Learning/
 ipython_notebooks/
+# Don't save data files
+*.csv
 
 ############################################
 # R Section
