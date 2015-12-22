@@ -105,37 +105,47 @@ def wrapper():
     print(plot_regression(poly15_data, 'full'))
 
     # Compare Splits
+    os.chdir('..')
     set1 = pd.read_csv('wk3_kc_house_set_1_data.csv', dtype=dtype_dict)
+    os.chdir('Week3_Assessing_performance')
     set1 = set1.sort_values(by=['sqft_living', 'price'])
     set1_15 = polynomial_dataframe(set1['sqft_living'], 15)
     set1_15['price'] = set1['price']
     print('set1 15th degree')
     print(plot_regression(set1_15, 'set1')[14])
 
+    os.chdir('..')
     set2 = pd.read_csv('wk3_kc_house_set_2_data.csv', dtype=dtype_dict)
+    os.chdir('Week3_Assessing_performance')
     set2 = set2.sort_values(by=['sqft_living', 'price'])
     set2_15 = polynomial_dataframe(set2['sqft_living'], 15)
     set2_15['price'] = set2['price']
     print('set2 15th degree')
     print(plot_regression(set2_15, 'set2')[14])
 
+    os.chdir('..')
     set3 = pd.read_csv('wk3_kc_house_set_3_data.csv', dtype=dtype_dict)
+    os.chdir('Week3_Assessing_performance')
     set3 = set3.sort_values(by=['sqft_living', 'price'])
     set3_15 = polynomial_dataframe(set3['sqft_living'], 15)
     set3_15['price'] = set3['price']
     print('set3 15th degree')
     print(plot_regression(set3_15, 'set3')[14])
 
+    os.chdir('..')
     set4 = pd.read_csv('wk3_kc_house_set_4_data.csv', dtype=dtype_dict)
+    os.chdir('Week3_Assessing_performance')
     set4 = set4.sort_values(by=['sqft_living', 'price'])
     set4_15 = polynomial_dataframe(set4['sqft_living'], 15)
     set4_15['price'] = set4['price']
     print('set4 15th degree')
     print(plot_regression(set4_15, 'set4')[14])
 
+    os.chdir('..')
     test = pd.read_csv('wk3_kc_house_test_data.csv', dtype=dtype_dict)
     train = pd.read_csv('wk3_kc_house_train_data.csv', dtype=dtype_dict)
     valid = pd.read_csv('wk3_kc_house_valid_data.csv', dtype=dtype_dict)
+    os.chdir('Week3_Assessing_performance')
     check_15_degrees(test, train, valid)
 
 
