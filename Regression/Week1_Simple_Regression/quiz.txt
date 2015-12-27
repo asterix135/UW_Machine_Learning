@@ -1,0 +1,10 @@
+1. 263.0 - Y
+2. 124.6 - Y
+3. No regularization - Y
+4. Between 2e14 and 5e14
+5. 243.1 - Y
+6. 91.5 - Y
+7. Between 8e13 and 2e14 - N
+   Between 2e14 and 4e14 - N
+   Between 4e14 and 8e14
+8. The weights learned with high regularization (l2_penalty=1e11)
