@@ -6,6 +6,8 @@ Machine_Learning/
 ipython_notebooks/
 # Don't save data files
 *.csv
+# Don't save ipython notebooks
+*.ipynb
 
 ############################################
 # R Section
