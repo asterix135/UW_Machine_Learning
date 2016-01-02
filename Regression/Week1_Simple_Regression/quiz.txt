@@ -13,6 +13,9 @@
 1. sqft_living, grade: O
 2. 1000 and 10000: X
    100 and 1000: X
-3. 4: X
-   5: X
-   6: X
+   0 and 100
+3. 15
+4: 264
+5: 156
+6: sqft_living
+   bathrooms
