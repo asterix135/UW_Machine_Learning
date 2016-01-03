@@ -9,13 +9,3 @@
    Between 4e14 and 8e14
 8. The weights learned with high regularization (l2_penalty=1e11)
 
-
-1. sqft_living, grade: O
-2. 1000 and 10000: X
-   100 and 1000: X
-   0 and 100
-3. 15
-4: 264
-5: 156
-6: sqft_living
-   bathrooms

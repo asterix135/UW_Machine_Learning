@@ -2,8 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 from sklearn import linear_model
-import matplotlib.pyplot as plt
-from math import log, sqrt
+from math import sqrt
 
 
 ALL_FEATURES = ['bedrooms', 'bedrooms_square',
@@ -47,6 +46,13 @@ def question1(df):
 
 
 def question2(train, valid, test):
+    """
+    Find Best l1 value for Lasso regression
+    :param train: pandas dataframe
+    :param valid: pandas dataframe
+    :param test: pandas dataframe
+    :return:
+    """
     best_rss = float('inf')
 
     # figure out best penalty for Lasso
@@ -73,9 +79,9 @@ def question2(train, valid, test):
 def question3(train, valid, test):
     """
     Fit Lasso model with max 7 features
-    :param train:
-    :param valid:
-    :param test:
+    :param train: pandas dataframe
+    :param valid: pandas dataframe
+    :param test: pandas dataframe
     :return:
     """
     # find range that has appx the right number of non-zero coefficients
