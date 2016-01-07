@@ -1,4 +1,3 @@
-import os
 import numpy as np
 import pandas as pd
 from sklearn import linear_model
@@ -51,6 +50,50 @@ def compute_distances(features_instances, features_query):
     return distances
 
 
+def k_nearest_neighbors(k, features_train, features_query):
+    """
+    Finds k nearest neighbors to a given query instance
+    :param k: integer
+    :param features_train: numpy array
+    :param features_query: numpy array
+    :return neighbors: indices of k nearest neighbors
+    """
+    distances = compute_distances(features_train, features_query)
+    neighbors = np.argsort(distances)
+    return neighbors[:k]
+
+
+def predict_output_of_query(k, features_train, output_train, features_query):
+    """
+    Returns average y-value of k-nearest neighbors to features_query instance
+    :param k: integer
+    :param features_train: numpy array
+    :param output_train: numpy array
+    :param features_query: numpy array
+    :return prediction: mean (unweighted) of y-values for k-nearest neighbors
+    """
+    neighbors = k_nearest_neighbors(k, features_train, features_query)
+    prediction = np.mean(output_train[neighbors])
+    return prediction
+
+
+def predict_output(k, features_train, output_train, features_query):
+    """
+    Uses knn to predict average output value for each element in training set
+    :param k: integer
+    :param features_train: numpy array
+    :param output_train: numpy array
+    :param features_query: numpy array
+    :return predictions: numpy array
+    """
+    predictions = []
+    for i in range(features_query.shape[0]):
+        predictions.append(predict_output_of_query(k, features_train,
+                                                   output_train,
+                                                   features_query[i]))
+    return np.array(predictions)
+
+
 def question1(test, train):
     # find Euclidian distance between 2 houses
     print('distance between test[0] and train [9]')
@@ -70,6 +113,7 @@ def question2(test, train):
         print(i, distance)
     print('\nClosest house is index #: ' + str(closest_house))
 
+
 def test_vectorization(test, train):
     for i in range(3):
         print(train[i] - test[0])
@@ -88,11 +132,49 @@ def test_vectorization(test, train):
 
 
 def question3(test, train, train_output):
+    # Find nearest house and predicted value to a sample
     print('\nNearest house to test[2]')
     differences = compute_distances(train, test[2])
     min_index = np.argmin(differences)
     print('Index of closest house: ' + str(min_index))
     print('predicted house price: ' + str(train_output[min_index]))
+
+
+def question4(test, train, train_output):
+    # knn regression
+    nearest_4 = k_nearest_neighbors(4, train, test[2])
+    print('\nNearest 4 neighbors to test[2]')
+    print(nearest_4)
+    print('Predicted value for test[2]')
+    print(predict_output_of_query(4, train, train_output, test[2]))
+
+
+def question5(test, train, train_output):
+    # find index and value for lowest predicted price from first 10
+    # houses in train set
+    print('\nLowest predicted price and index for train[:10]')
+    test10 = predict_output(10, train, train_output, test[:10,])
+    min_index = np.argmin(test10)
+    print('Index number: ' + str(min_index))
+    print('Predicted value: ' + str(test10[min_index]))
+
+
+def question6(test, test_output, train, train_output, valid, valid_output):
+    # find optimal k value from validation set
+    print('\nThis part is slower...')
+    best_rss = float('inf')
+    best_k = 0
+    for k in range(1, 16):
+        k_preds = predict_output(k, train, train_output, valid)
+        rss = np.sum((valid_output - k_preds)**2)
+        if rss < best_rss:
+            best_rss, best_k = rss, k
+    print('\nBest k value: ' + str(best_k))
+
+    # find rss for test set based on best_k
+    test_preds = predict_output(best_k, train, train_output, test)
+    rss_test = np.sum((test_output - test_preds)**2)
+    print('RSS for test data: ' + str(rss_test))
 
 
 def wrapper():
@@ -150,6 +232,10 @@ def wrapper():
     question2(test_features, train_features)
     # test_vectorization(test_features, train_features)
     question3(test_features, train_features, train_output)
+    question4(test_features, train_features, train_output)
+    question5(test_features, train_features, train_output)
+    question6(test_features, test_output, train_features, train_output,
+              valid_features, valid_output)
 
 if __name__ == '__main__':
     wrapper()

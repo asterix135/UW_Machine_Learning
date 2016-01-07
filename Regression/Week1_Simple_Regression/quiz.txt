@@ -9,7 +9,3 @@
    Between 4e14 and 8e14
 8. The weights learned with high regularization (l2_penalty=1e11)
 
-1. 0.060 O
-2. 8 O
-3. 382 O
-4. 249000 O
