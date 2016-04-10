@@ -6,6 +6,7 @@ Machine_Learning/
 ipython_notebooks/
 # Don't save data files
 *.csv
+*.json
 # Don't save ipython notebooks
 *.ipynb
 
