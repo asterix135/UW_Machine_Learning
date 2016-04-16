@@ -7,8 +7,9 @@ ipython_notebooks/
 # Don't save data files
 *.csv
 *.json
-# Don't save ipython notebooks
-*.ipynb
+Classification/Week2_learn_linear/module-3-linear-classifier-learning-assignment-blank.ipynb
+Classification/Week2_learn_linear/module-4-linear-classifier-regularization-assignment-blank.ipynb
+
 
 ############################################
 # R Section
