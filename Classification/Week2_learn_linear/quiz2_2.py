@@ -4,6 +4,7 @@ Code to answers second programming quiz week 2
 
 import json
 import os
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import string
@@ -112,7 +113,7 @@ print('========================\n\n')
 def logistic_regression_with_L2(feature_matrix, sentiment,
                                 initial_coefficients, step_size,
                                 l2_penalty, max_iter):
-    coefficients = np.array(initial_coefficients) # make sure it's a numpy array
+    coefficients = np.array(initial_coefficients)  # make sure is a numpy array
     for itr in range(max_iter):
         # Predict P(y_i = +1|x_i,w) using your predict_probability() function
         predictions = predict_probability(feature_matrix, coefficients)
@@ -123,7 +124,7 @@ def logistic_regression_with_L2(feature_matrix, sentiment,
         # Compute the errors as indicator - predictions
         errors = indicator - predictions
 
-        for j in range(len(coefficients)): # loop over each coefficient
+        for j in range(len(coefficients)):  # loop over each coefficient
             is_intercept = (j == 0)
             # Compute the derivative for coefficients[j].
             # Save it in a variable called derivative
@@ -182,3 +183,141 @@ coefficients_1e5_penalty = logistic_regression_with_L2(
     feature_matrix_train, sentiment_train, initial_coefficients=np.zeros(194),
     step_size=5e-6, l2_penalty=1e5, max_iter=501
 )
+
+# Create table of features & learned coefficients
+table = pd.DataFrame({'word': ['(intercept)'] + important_words})
+
+
+# NB - this uses a global variable, but it's given by class :(
+def add_coefficients_to_table(coefficients, column_name):
+    table[column_name] = coefficients
+    return table
+
+add_coefficients_to_table(coefficients_0_penalty, 'coefficients [L2=0]')
+add_coefficients_to_table(coefficients_4_penalty, 'coefficients [L2=4]')
+add_coefficients_to_table(coefficients_10_penalty, 'coefficients [L2=10]')
+add_coefficients_to_table(coefficients_1e2_penalty, 'coefficients [L2=1e2]')
+add_coefficients_to_table(coefficients_1e3_penalty, 'coefficients [L2=1e3]')
+add_coefficients_to_table(coefficients_1e5_penalty, 'coefficients [L2=1e5]')
+
+# find top five words and bottom five for L2=0
+sorted_frame = table.sort_values(by='coefficients [L2=0]', ascending=False)
+positive_words = sorted_frame.iloc[:5]['word'].tolist()
+negative_words = sorted_frame.iloc[-5:]['word'].tolist()
+
+print('========================')
+print('Question 3')
+print('----------\n')
+print('Top Positive & Negative Words')
+print(positive_words)
+print(negative_words)
+print('========================\n\n')
+
+# Plot coefficients
+plt.rcParams['figure.figsize'] = 10, 6
+
+
+def make_coefficient_plot(table, positive_words, negative_words,
+                          l2_penalty_list):
+    cmap_positive = plt.get_cmap('Reds')
+    cmap_negative = plt.get_cmap('Blues')
+
+    xx = l2_penalty_list
+    plt.plot(xx, [0.]*len(xx), '--', lw=1, color='k')
+
+    table_positive_words = table[table['word'].isin(positive_words)]
+    table_negative_words = table[table['word'].isin(negative_words)]
+    del table_positive_words['word']
+    del table_negative_words['word']
+
+    for i in range(len(positive_words)):
+        color = cmap_positive(0.8*((i+1)/(len(positive_words)*1.2)+0.15))
+        plt.plot(xx, table_positive_words[i:i+1].as_matrix().flatten(),
+                 '-', label=positive_words[i], linewidth=4.0, color=color)
+
+    for i in range(len(negative_words)):
+        color = cmap_negative(0.8*((i+1)/(len(negative_words)*1.2)+0.15))
+        plt.plot(xx, table_negative_words[i:i+1].as_matrix().flatten(),
+                 '-', label=negative_words[i], linewidth=4.0, color=color)
+
+    plt.legend(loc='best', ncol=3, prop={'size': 16}, columnspacing=0.5)
+    plt.axis([1, 1e5, -1, 2])
+    plt.title('Coefficient path')
+    plt.xlabel('L2 penalty ($\lambda$)')
+    plt.ylabel('Coefficient value')
+    plt.xscale('log')
+    plt.rcParams.update({'font.size': 18})
+    plt.tight_layout()
+
+print('========================')
+print('Question 4')
+print('----------\n')
+print('True - all coefficients get smaller')
+print('========================\n\n')
+
+print('========================')
+print('Question 5')
+print('----------\n')
+print('False: order is not preserved')
+print('========================\n\n')
+
+# Calculate accuracy
+
+
+def get_classification_accuracy(feature_matrix, sentiment, coefficients):
+    scores = np.dot(feature_matrix, coefficients)
+    apply_threshold = np.vectorize(lambda x: 1. if x > 0 else -1.)
+    predictions = apply_threshold(scores)
+
+    num_correct = (predictions == sentiment).sum()
+    accuracy = num_correct / len(feature_matrix)
+    return accuracy
+
+
+train_accuracy = {}
+train_accuracy[0] = get_classification_accuracy(
+    feature_matrix_train, sentiment_train, coefficients_0_penalty
+)
+train_accuracy[4] = get_classification_accuracy(
+    feature_matrix_train, sentiment_train, coefficients_4_penalty
+)
+train_accuracy[10] = get_classification_accuracy(
+    feature_matrix_train, sentiment_train, coefficients_10_penalty
+)
+train_accuracy[1e2] = get_classification_accuracy(
+    feature_matrix_train, sentiment_train, coefficients_1e2_penalty
+)
+train_accuracy[1e3] = get_classification_accuracy(
+    feature_matrix_train, sentiment_train, coefficients_1e3_penalty
+)
+train_accuracy[1e5] = get_classification_accuracy(
+    feature_matrix_train, sentiment_train, coefficients_1e5_penalty
+)
+
+validation_accuracy = {}
+validation_accuracy[0] = get_classification_accuracy(
+    feature_matrix_valid, sentiment_valid, coefficients_0_penalty
+)
+validation_accuracy[4] = get_classification_accuracy(
+    feature_matrix_valid, sentiment_valid, coefficients_4_penalty
+)
+validation_accuracy[10] = get_classification_accuracy(
+    feature_matrix_valid, sentiment_valid, coefficients_10_penalty
+)
+validation_accuracy[1e2] = get_classification_accuracy(
+    feature_matrix_valid, sentiment_valid, coefficients_1e2_penalty
+)
+validation_accuracy[1e3] = get_classification_accuracy(
+    feature_matrix_valid, sentiment_valid, coefficients_1e3_penalty
+)
+validation_accuracy[1e5] = get_classification_accuracy(
+    feature_matrix_valid, sentiment_valid, coefficients_1e5_penalty
+)
+
+# Build a simple report
+for key in sorted(validation_accuracy.keys()):
+    print("L2 penalty = %g" % key)
+    print("train accuracy = %s, validation_accuracy = %s" %
+          (train_accuracy[key], validation_accuracy[key]))
+    print("------------------------------------------------------------------"
+          "--------------")
