@@ -35,7 +35,7 @@ features = ['grade',  # grade of the loan
 target = 'safe_loans'  # prediction target (y) (+1 means safe, -1 is risky)
 loans = loans[features + [target]]
 
-# Unpack categorical variables
+# Unpack categorical variables (One-hot encoding)
 loans_data = pd.get_dummies(loans)
 
 # Split test/train with provided indices
@@ -65,5 +65,19 @@ small_model.fit(train_matrix, train_target)
 tree.export_graphviz(small_model, out_file='Week3_Trees/small_model.dot')
 with open('Week3_Trees/small_model.dot', 'r') as f:
     text = f.read()
-dot = graphviz.Source(text)
-dot.format = 'png'
+dot = graphviz.Source(text, format='png')
+dot.render()
+
+# Making predictions
+
+validation_safe_loans = validation_matrix[validation_data[target] == 1]
+validation_risky_loans = validation_matrix[validation_data[target] == -1]
+
+sample_validation_data_risky = validation_risky_loans[0:2]
+sample_validation_data_safe = validation_safe_loans[0:2]
+
+sample_validation_data = np.append(sample_validation_data_safe,
+                                   sample_validation_data_risky,
+                                   axis=0)
+
+decision_tree_model.predict(sample_validation_data)
